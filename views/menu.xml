@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem 
+        id="is_ect_collecte_main_menu" 
+        sequence="1" 
+        name="ECT Collecte"   
+    />
+    <menuitem 
+        id="is_reclamation_main_menu" 
+        sequence="10" 
+        name="Réclamations"   
+        parent="is_ect_collecte_main_menu" 
+    />
+    <menuitem 
+        id="is_reclamation_a_traiter_menu" 
+        sequence="10" 
+        name="Réclamations à traiter"   
+        parent="is_reclamation_main_menu" 
+        action="is_reclamation_action" 
+    />
+    <menuitem 
+        id="is_reclamation_terminee_menu" 
+        sequence="20" 
+        name="Réclamations terminées"
+        parent="is_reclamation_main_menu" 
+        action="is_reclamation_action" 
+    />
+    <menuitem 
+        id="is_reclamation_en_attente_menu" 
+        sequence="30" 
+        name="Réclamations en attente"
+        parent="is_reclamation_main_menu" 
+        action="is_reclamation_action" 
+    />
+    <menuitem 
+        id="is_reclamation_menu" 
+        sequence="40" 
+        name="Toutes les réclamations"
+        parent="is_reclamation_main_menu" 
+        action="is_reclamation_action" 
+    />
+
+
+    <!-- Déplacer les menus inutilisés sous 'Configuration / Technique' -->
+    <menuitem id="mail.mail_channel_menu_root_chat" parent="base.menu_custom"/>
+    <menuitem id="utm.menu_link_tracker_root"       parent="base.menu_custom"/>
+
+
+</odoo>

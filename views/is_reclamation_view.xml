@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="is_reclamation_seq" model="ir.sequence">
+        <field name="name">Réclamations</field>
+        <field name="code">is.reclamation</field>
+        <field name="prefix">R-</field>
+        <field name="padding">5</field>
+        <field eval="False" name="company_id"/>
+    </record>
+
+
+    <record id="is_reclamation_form_view" model="ir.ui.view">
+        <field name="name">is_reclamation_form_view</field>
+        <field name="model">is.reclamation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" clickable="true"/>
+                </header>
+                <sheet>
+                    <group string="Identification">
+                        <field name="num"/>
+                        <field name="collectivite_id"/>
+                        <field name="date_heure"/>
+                        <field name="ville"/>
+                        <field name="usager"/>
+                        <field name="adresse"/>
+                        <field name="objet_id"/>
+                        <field name="name"/>
+                        <field name="secteur"/>
+                    </group>
+                    <group string="Prise en compte">
+                        <field name="heure_prise_en_compte"/>
+                        <field name="observation"/>
+                    </group>
+                    <group string="Réponse">
+                        <field name="date_cloture"/>
+                        <field name="reponse_cloture"/>
+                        <field name="delai_prise_en_compte"/>
+                        <field name="delai_cloture"/>
+                        <field name="origine_demande_id"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="is_reclamation_tree_view" model="ir.ui.view">
+        <field name="name">is_reclamation_tree_view</field>
+        <field name="model">is.reclamation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="num"/>
+                <field name="collectivite_id"/>
+                <field name="date_heure"/>
+                <field name="ville"/>
+                <field name="usager"/>
+                <field name="adresse"/>
+                <field name="objet_id"/>
+                <field name="name"/>
+                <field name="secteur"/>
+                <field name="heure_prise_en_compte"/>
+                <field name="observation"/>
+                <field name="date_cloture"/>
+                <field name="reponse_cloture"/>
+                <field name="delai_prise_en_compte"/>
+                <field name="delai_cloture"/>
+                <field name="origine_demande_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="is_reclamation_action" model="ir.actions.act_window">
+        <field name="name">Réclamations</field>
+        <field name="res_model">is.reclamation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
