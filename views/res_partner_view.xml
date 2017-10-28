@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="is_view_partner_form" model="ir.ui.view">
+            <field name="name">is_view_partner_form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <!-- Liste des icones : http://fortawesome.github.io/Font-Awesome/icons/  -->
+                    <button 
+                        class="oe_stat_button" 
+                        name="reclamation_action" type="object"
+                        icon="fa-list">
+                        <field string="Réclamations" name="is_reclamation_count" widget="statinfo"/>
+                    </button>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

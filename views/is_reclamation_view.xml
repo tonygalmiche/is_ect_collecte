@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+
+    <!-- Collectivités (Clients) -->
+    <record id="is_res_partner_action" model="ir.actions.act_window">
+        <field name="name">Collectivités</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_is_company':1,'default_customer':1}</field>
+        <field name="domain">[('is_company','=',True),('customer','=',True)]</field>
+    </record>
+
+
+
+
+    <!-- Réclamations --> 
     <record id="is_reclamation_seq" model="ir.sequence">
         <field name="name">Réclamations</field>
         <field name="code">is.reclamation</field>
@@ -8,39 +23,50 @@
         <field name="padding">5</field>
         <field eval="False" name="company_id"/>
     </record>
-
-
     <record id="is_reclamation_form_view" model="ir.ui.view">
         <field name="name">is_reclamation_form_view</field>
         <field name="model">is.reclamation</field>
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <button name="prendre_en_compte_action" string="Prendre en compte cette demande" type="object" states="a_traiter"/>
+                    <button name="cloturer_action" string="Cloturer cette demande" type="object" states="en_attente"/>
+                    <button name="send_mail_action" string="Envoyer un mail" type="object" states="a_traiter,en_attente"/>
                     <field name="state" widget="statusbar" clickable="true"/>
                 </header>
                 <sheet>
                     <group string="Identification">
                         <field name="num"/>
-                        <field name="collectivite_id"/>
-                        <field name="date_heure"/>
+                        <field name="collectivite_id" required="True"/>
+                        <field name="date_creation"      required="True"/>
                         <field name="ville"/>
                         <field name="usager"/>
                         <field name="adresse"/>
-                        <field name="objet_id"/>
-                        <field name="name"/>
-                        <field name="secteur"/>
+                        <field name="objet_id"        required="True"/>
+                        <field name="info"            required="True"/>
+                        <field name="secteur"         required="True"/>
                     </group>
                     <group string="Prise en compte">
-                        <field name="heure_prise_en_compte"/>
+                        <field name="date_prise_en_compte"/>
                         <field name="observation"/>
                     </group>
                     <group string="Réponse">
                         <field name="date_cloture"/>
                         <field name="reponse_cloture"/>
-                        <field name="delai_prise_en_compte"/>
-                        <field name="delai_cloture"/>
-                        <field name="origine_demande_id"/>
+                        <field name="delai_prise_en_compte" widget="float_time"/>
+                        <field name="delai_cloture"         widget="float_time"/>
+                        <field name="origine_demande"/>
                     </group>
+
+                    <group string="Données techniques">
+                        <field name="suivi_par_id"/>
+                        <field name="mail_template_id"/>
+                        <field name="name"/>
+                        <field name="email_from"/>
+                        <field name="email_to"/>
+                        <field name="email_cc"/>
+                    </group>
+
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -55,29 +81,199 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="num"/>
+                <field name="suivi_par_id"/>
                 <field name="collectivite_id"/>
-                <field name="date_heure"/>
+                <field name="date_creation"/>
                 <field name="ville"/>
                 <field name="usager"/>
                 <field name="adresse"/>
                 <field name="objet_id"/>
-                <field name="name"/>
                 <field name="secteur"/>
-                <field name="heure_prise_en_compte"/>
+                <field name="date_prise_en_compte"/>
                 <field name="observation"/>
                 <field name="date_cloture"/>
                 <field name="reponse_cloture"/>
                 <field name="delai_prise_en_compte"/>
                 <field name="delai_cloture"/>
-                <field name="origine_demande_id"/>
+                <field name="origine_demande"/>
                 <field name="state"/>
             </tree>
         </field>
     </record>
+    <record model="ir.ui.view" id="is_reclamation_search_view" >
+        <field name="name">is_reclamation_search_view</field>
+        <field name="model">is.reclamation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="num"/>
+                <field name="suivi_par_id"/>
+                <field name="collectivite_id"/>
+                <field name="ville"/>
+                <field name="objet_id"/>
+                <field name="name"/>
+                <field name="secteur"/>
+                <field name="observation"/>
+                <field name="reponse_cloture"/>
+                <field name="state"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="is_reclamation_par_client_pivot_view" model="ir.ui.view">
+        <field name="name">is_reclamation_par_client_pivot_view</field>
+        <field name="model">is.reclamation</field>
+        <field name="arch" type="xml">
+            <pivot string="Réclamations par par mois et par client">
+                <field name="collectivite_id" type="row"/>
+                <field name="date_creation" type="col"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="is_reclamation_par_objet_pivot_view" model="ir.ui.view">
+        <field name="name">is_reclamation_par_objet_pivot_view</field>
+        <field name="model">is.reclamation</field>
+        <field name="arch" type="xml">
+            <pivot string="Réclamations par par mois et par client">
+                <field name="objet_id" type="row"/>
+                <field name="date_creation" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+
+
+
     <record id="is_reclamation_action" model="ir.actions.act_window">
-        <field name="name">Réclamations</field>
+        <field name="name">Toutes les réclamations</field>
         <field name="res_model">is.reclamation</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
+    <record id="is_reclamation_a_traiter_action" model="ir.actions.act_window">
+        <field name="name">Réclamations à traiter</field>
+        <field name="res_model">is.reclamation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','a_traiter')]</field>
+    </record>
+    <record id="is_reclamation_en_attente_action" model="ir.actions.act_window">
+        <field name="name">Réclamations en attente</field>
+        <field name="res_model">is.reclamation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','en_attente')]</field>
+    </record>
+    <record id="is_reclamation_termine_action" model="ir.actions.act_window">
+        <field name="name">Réclamations terminées</field>
+        <field name="res_model">is.reclamation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','termine')]</field>
+    </record>
+
+
+    <record id="is_reclamation_par_client_action" model="ir.actions.act_window">
+        <field name="name">Réclamations par client</field>
+        <field name="res_model">is.reclamation</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="is_reclamation_par_client_pivot_view"/>
+        <field name="view_mode">pivot,tree,form,</field>
+        <field name="domain">[]</field>
+    </record>
+    <record id="is_reclamation_par_objet_action" model="ir.actions.act_window">
+        <field name="name">Réclamations par objet</field>
+        <field name="res_model">is.reclamation</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="is_reclamation_par_objet_pivot_view"/>
+        <field name="view_mode">pivot,tree,form,</field>
+        <field name="domain">[]</field>
+    </record>
+
+
+
+    <!-- Objet de la réclamation -->
+    <record id="is_reclamation_objet_form_view" model="ir.ui.view">
+        <field name="name">"is_reclamation_objet_form_view</field>
+        <field name="model">is.reclamation.objet</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="is_reclamation_objet_tree_view" model="ir.ui.view">
+        <field name="name">"is_reclamation_objet_tree_view</field>
+        <field name="model">is.reclamation.objet</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="is_reclamation_objet_action" model="ir.actions.act_window">
+        <field name="name">Objet de la réclamation</field>
+        <field name="res_model">is.reclamation.objet</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+
+
+
+
+    <!-- ir.cron -->
+    <record id="is_ir_cron_action" model="ir.actions.act_window">
+        <field name="name">Actions planifiées</field>
+        <field name="res_model">ir.cron</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('name','=','Fetchmail Service')]</field>
+    </record>
+
+
+    <!-- fetchmail.server -->
+    <record id="is_fetchmail_server_action" model="ir.actions.act_window">
+        <field name="name">Serveurs de courriels entrant</field>
+        <field name="res_model">fetchmail.server</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- mail.message -->
+    <record id="is_mail_message_action" model="ir.actions.act_window">
+        <field name="name">Messages</field>
+        <field name="res_model">mail.message</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('model','=','is.reclamation'),('message_type','=','email')]</field>
+    </record>
+
+
+    <!-- mail.template -->
+    <record id="is_mail_template_action" model="ir.actions.act_window">
+        <field name="name">Modèles de courriels</field>
+        <field name="res_model">mail.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('model_id.name','=','is.reclamation')]</field>
+    </record>
+
+
+    <!-- Ce modèle de courriel est utilisé pour définir la signature de tous les courriels -->
+    <record id="is_mail_footer_template_action" model="ir.actions.act_window">
+        <field name="name">Signature des courriels</field>
+        <field name="res_model">mail.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('name','=','Notification Email')]</field>
+    </record>
+
+
 </odoo>

@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+
+
     <menuitem 
         id="is_ect_collecte_main_menu" 
         sequence="1" 
         name="ECT Collecte"   
     />
+
+
+
+    <!-- Collectivité -->
+    <record id="is_res_partner_main_menu" model="ir.ui.menu">
+        <field name="name">Collectivités</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
+        <field name="groups_id" eval="[(6,0,[
+        ])]"/>
+    </record>
+    <menuitem 
+        id="is_res_partner_menu" 
+        sequence="10" 
+        name="Collectivités"
+        parent="is_res_partner_main_menu" 
+        action="is_res_partner_action" 
+    />
+
+
+    <!-- Réclamations -->
     <menuitem 
         id="is_reclamation_main_menu" 
-        sequence="10" 
+        sequence="20" 
         name="Réclamations"   
         parent="is_ect_collecte_main_menu" 
     />
@@ -17,21 +40,21 @@
         sequence="10" 
         name="Réclamations à traiter"   
         parent="is_reclamation_main_menu" 
-        action="is_reclamation_action" 
-    />
-    <menuitem 
-        id="is_reclamation_terminee_menu" 
-        sequence="20" 
-        name="Réclamations terminées"
-        parent="is_reclamation_main_menu" 
-        action="is_reclamation_action" 
+        action="is_reclamation_a_traiter_action" 
     />
     <menuitem 
         id="is_reclamation_en_attente_menu" 
-        sequence="30" 
+        sequence="20" 
         name="Réclamations en attente"
         parent="is_reclamation_main_menu" 
-        action="is_reclamation_action" 
+        action="is_reclamation_en_attente_action" 
+    />
+    <menuitem 
+        id="is_reclamation_terminee_menu" 
+        sequence="30" 
+        name="Réclamations terminées"
+        parent="is_reclamation_main_menu" 
+        action="is_reclamation_termine_action" 
     />
     <menuitem 
         id="is_reclamation_menu" 
@@ -40,6 +63,99 @@
         parent="is_reclamation_main_menu" 
         action="is_reclamation_action" 
     />
+
+
+    <!-- Statistiques -->
+    <record id="is_statistique_menu" model="ir.ui.menu">
+        <field name="name">Statistiques</field>
+        <field name="sequence">30</field>
+        <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
+        <field name="groups_id" eval="[(6,0,[
+        ])]"/>
+    </record>
+    <menuitem 
+        id="is_reclamation_par_client_menu" 
+        sequence="10" 
+        name="Réclamations par client"
+        parent="is_statistique_menu" 
+        action="is_reclamation_par_client_action" 
+    />
+    <menuitem 
+        id="is_reclamation_par_objet_menu" 
+        sequence="20" 
+        name="Réclamations par objet"
+        parent="is_statistique_menu" 
+        action="is_reclamation_par_objet_action" 
+    />
+
+
+
+    <!-- Objet de la réclamantion -->
+    <record id="is_table_menu" model="ir.ui.menu">
+        <field name="name">Tables</field>
+        <field name="sequence">40</field>
+        <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
+        <field name="groups_id" eval="[(6,0,[
+        ])]"/>
+    </record>
+    <menuitem 
+        id="is_reclamation_objet_menu" 
+        sequence="10" 
+        name=" Objet de la réclamantion"
+        parent="is_table_menu" 
+        action="is_reclamation_objet_action" 
+    />
+
+
+
+    <!-- Configuration -->
+    <record id="is_configuration_menu" model="ir.ui.menu">
+        <field name="name">Configuration</field>
+        <field name="sequence">50</field>
+        <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
+        <field name="groups_id" eval="[(6,0,[
+            ref('base.group_no_one'),
+        ])]"/>
+    </record>
+    <menuitem 
+        id="is_ir_cron_menu" 
+        sequence="10" 
+        name="Actions planifiées"
+        parent="is_configuration_menu" 
+        action="is_ir_cron_action" 
+    />
+    <menuitem 
+        id="is_fetchmail_server_menu" 
+        sequence="20" 
+        name="Serveurs de courriels"
+        parent="is_configuration_menu" 
+        action="is_fetchmail_server_action" 
+    />
+    <menuitem 
+        id="is_mail_message_menu" 
+        sequence="30" 
+        name="Courriels"
+        parent="is_configuration_menu" 
+        action="is_mail_message_action" 
+    />
+    <menuitem 
+        id="is_mail_template_menu" 
+        sequence="40" 
+        name="Modèles de courriels"
+        parent="is_configuration_menu" 
+        action="is_mail_template_action" 
+    />
+    <menuitem 
+        id="is_mail_footer_template_menu" 
+        sequence="50" 
+        name="Signature des courriels"
+        parent="is_configuration_menu" 
+        action="is_mail_footer_template_action" 
+    />
+
+
+
+
 
 
     <!-- Déplacer les menus inutilisés sous 'Configuration / Technique' -->
