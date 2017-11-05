@@ -6,33 +6,18 @@ import time
 from datetime import datetime
 
 
-#TODO :
-
-# - Revoir le champ 'Pour' de l'envoi d'un mail pour afficher les mails rééls et non pas des liens avec des 
-# - Ajouter le client dans les foloower, sinon le client n'est pas destinataire des mails
-
-# - Lors de l'envoi du mail avec le bouton, le champ cc du modèle se retrouve dans le champ 'to' => Remettre en cc
-#   Dans le modèle de mail, il est bien possible de mettre une personne en copie, mais ce champ se 
-#   retrouve dans les destinataire lors de l'envoi car le model mail.message ne contient pas de champ 'copie'
-
-# - Demander la création du sous domaine odoo.xxxx
-# - Demander les mot de passe pour les 2 messageries à intégrer les mails
-
-
 class IsReclamation(models.Model):
     _name = 'is.reclamation'
     _inherit = ['mail.thread']
     _order = 'num desc'
 
     num                   = fields.Char('N° de réclamation', readonly=True)
-
-
     suivi_par_id          = fields.Many2one('res.users', string='Suivi par')
     mail_template_id = fields.Many2one('mail.template', 
         string='Modèle de courriel associé',
         domain=[('model_id.name','=','is.reclamation')])
     collectivite_id       =  fields.Many2one('res.partner', string='Collectivité', domain=[('is_company','=',True),('customer','=',True)])
-    date_creation            = fields.Datetime('Date de création', readonly=True,default=fields.datetime.now())
+    date_creation         = fields.Datetime('Date de création', readonly=True,default=fields.datetime.now())
     ville                 = fields.Char('Ville')
     usager                = fields.Char('Usager')
     adresse               = fields.Text('Adresse')
@@ -53,19 +38,15 @@ class IsReclamation(models.Model):
         ('telephone'    , u'Téléphone'),
         ('site_internet', u'Site internet'),
     ], 'Origine de la demande', required=True, default='telephone')
-
-
     name                  = fields.Text('Sujet du mail')
     email_from            = fields.Char('From', readonly=True)
     email_to              = fields.Char('To'  , readonly=True)
     email_cc              = fields.Char('Cc'  , readonly=True)
-
     state                 = fields.Selection([
         ('a_traiter' , u'A traiter'),
         ('en_attente', u'En attente'),
         ('termine'   , u'Terminée'),
     ], 'Etat', index=True, default='a_traiter', readonly=True)
-
 
 
     @api.multi
@@ -79,18 +60,12 @@ class IsReclamation(models.Model):
         return res
 
 
-
-
     @api.model
     def create(self, vals):
         sequences = self.env['ir.sequence'].search([('code','=','is.reclamation')])
         for sequence in sequences:
             vals['num'] = sequence.next_by_id()
         res = super(IsReclamation, self).create(vals)
-
-        print res.message_follower_ids
-        print vals
-
         return res
 
 
@@ -103,9 +78,6 @@ class IsReclamation(models.Model):
             date_creation             = time.mktime(time.strptime(obj.date_creation, '%Y-%m-%d %H:%M:%S'))
             date_prise_en_compte      = time.mktime(time.strptime(obj.date_prise_en_compte, '%Y-%m-%d %H:%M:%S'))
             delai_prise_en_compte     = (date_prise_en_compte - date_creation)/3600
-
-            print delai_prise_en_compte
-
             obj.delai_prise_en_compte = delai_prise_en_compte
             obj.state="en_attente"
 
@@ -126,8 +98,6 @@ class IsReclamation(models.Model):
     @api.multi
     def send_mail_action(self):
         for obj in self:
-            #obj.state="en_attente"
-
             ir_model_data = self.env['ir.model.data']
             try:
                 template_id = ir_model_data.get_object_reference('sale', 'email_template_edi_sale')[1]
@@ -146,14 +116,8 @@ class IsReclamation(models.Model):
                 'default_composition_mode': 'comment',
                 'default_use_template': bool(template_id),
                 'default_template_id': template_id,
+                'default_partner_ids':[(6, 0, [obj.collectivite_id.id])]
             })
-
-#                'default_partner_ids':[13],
-#                'default_subject':'toto',
-#                'mark_so_as_sent': True,
-
-
-
             return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
@@ -164,7 +128,6 @@ class IsReclamation(models.Model):
                 'target': 'new',
                 'context': ctx,
             }
-
 
 
 class IsReclamationObjet(models.Model):

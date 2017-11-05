@@ -5,10 +5,17 @@ import re
 import html2text
 
 
-
-
 class MailThread(models.AbstractModel):
     _inherit = 'mail.thread'
+
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def message_post(self, body='', subject=None, message_type='notification',
+                     subtype=None, parent_id=False, attachments=None,
+                     content_subtype='html', **kwargs):
+        res = super(MailThread, self).message_post(body,subject,message_type,subtype,parent_id,attachments,content_subtype,**kwargs)
+        return res
 
 
     @api.model
@@ -23,15 +30,19 @@ class MailThread(models.AbstractModel):
         if name_field in fields and not data.get('name'):
             data[name_field] = msg_dict.get('subject', '')
 
+
         #** Partie modifiée pour récupérer des infos du mail *******************
         if model=='is.reclamation':
             #** Recherche du client à partir de son mail ***********************
             email_from=msg_dict.get('from', '')
             match = re.search(r'[\w\.-]+@[\w\.-]+', email_from)
             email_from=match.group(0)
-            partner = self.env['res.partner'].search([('email','=',email_from)])
-            if partner.parent_id:
-                partner=partner.parent_id
+            partners = self.env['res.partner'].search([('email','=',email_from)])
+            collectivite_id=False
+            for partner in partners:
+                collectivite_id=partner.id
+                #if partner.parent_id:
+                #    collectivite_id=partner.parent_id.id
             #*******************************************************************
             server_id=self._context.get('fetchmail_server_id',False)
             server = self.env['fetchmail.server'].browse(server_id)
@@ -52,7 +63,7 @@ class MailThread(models.AbstractModel):
             data['suivi_par_id']     = server.is_user_id.id
             data['mail_template_id'] = server.is_mail_template_id.id
             data['secteur']          = server.is_secteur
-            data['collectivite_id']  = partner.id
+            data['collectivite_id']  = collectivite_id
             data['origine_demande']  = 'mail'
         #***********************************************************************
 

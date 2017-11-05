@@ -32,6 +32,7 @@ InfoSaône - Module Odoo ECT Collecte
         'views/is_reclamation_view.xml',
         'views/res_partner_view.xml',
         'views/menu.xml',
+        'wizard/mail_compose_message_view.xml',
     ],
     'installable': True,
     'application': True,
