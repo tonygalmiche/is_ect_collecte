@@ -8,7 +8,7 @@ from datetime import datetime
 
 class IsReclamation(models.Model):
     _name = 'is.reclamation'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread','ir.needaction_mixin']
     _order = 'num desc'
 
     num                   = fields.Char('N° de réclamation', readonly=True)
@@ -17,7 +17,7 @@ class IsReclamation(models.Model):
         string='Modèle de courriel associé',
         domain=[('model_id.name','=','is.reclamation')])
     collectivite_id       =  fields.Many2one('res.partner', string='Collectivité', domain=[('is_company','=',True),('customer','=',True)])
-    date_creation         = fields.Datetime('Date de création', readonly=True,default=fields.datetime.now())
+    date_creation         = fields.Datetime('Date de création',default=fields.datetime.now())
     ville                 = fields.Char('Ville')
     usager                = fields.Char('Usager')
     adresse               = fields.Text('Adresse')
@@ -27,12 +27,12 @@ class IsReclamation(models.Model):
         ('bourgogne'    , u'Bourgogne'),
         ('ile_de_france', u'Ile de France'),
     ], 'Secteur')
-    date_prise_en_compte  = fields.Datetime('Date de prise en compte', readonly=True)
+    date_prise_en_compte  = fields.Datetime('Date de prise en compte')
     observation           = fields.Text('Observation')
-    date_cloture          = fields.Datetime('Date de clôture', readonly=True)
+    date_cloture          = fields.Datetime('Date de clôture')
     reponse_cloture       = fields.Text('Réponse clôture')
-    delai_prise_en_compte = fields.Float('Délai pris en compte (H)', readonly=True, digits=[12,4])
-    delai_cloture         = fields.Float('Délai clôture (H)'       , readonly=True, digits=[12,4])
+    delai_prise_en_compte = fields.Float('Délai pris en compte (H)', compute='_compute', store=True, readonly=True, digits=[12,4])
+    delai_cloture         = fields.Float('Délai clôture (H)'       , compute='_compute', store=True, readonly=True, digits=[12,4])
     origine_demande       = fields.Selection([
         ('mail'         , u'Mail'),
         ('telephone'    , u'Téléphone'),
@@ -47,6 +47,28 @@ class IsReclamation(models.Model):
         ('en_attente', u'En attente'),
         ('termine'   , u'Terminée'),
     ], 'Etat', index=True, default='a_traiter', readonly=True)
+
+
+    @api.depends('date_creation','date_prise_en_compte','date_cloture')
+    def _compute(self):
+        for obj in self:
+            date_creation             = time.mktime(time.strptime(obj.date_creation, '%Y-%m-%d %H:%M:%S'))
+            date_prise_en_compte      = time.mktime(time.strptime(obj.date_prise_en_compte, '%Y-%m-%d %H:%M:%S'))
+            delai_prise_en_compte     = (date_prise_en_compte - date_creation)/3600
+            obj.delai_prise_en_compte = delai_prise_en_compte
+
+            date_creation     = time.mktime(time.strptime(obj.date_creation, '%Y-%m-%d %H:%M:%S'))
+            date_cloture      = time.mktime(time.strptime(obj.date_cloture, '%Y-%m-%d %H:%M:%S'))
+            delai_cloture     = (date_cloture - date_creation)/3600
+            obj.delai_cloture = delai_cloture
+
+
+    @api.model
+    def _needaction_count(self, domain=None):
+        if domain==[] or domain==[('state', '=', 'termine')]:
+            return False
+        ids=self.env['is.reclamation'].search(domain)
+        return len(ids)
 
 
     @api.multi
@@ -75,10 +97,6 @@ class IsReclamation(models.Model):
             if obj.observation==False:
                 raise Warning(u"Il est obligatoire de renseigner le champ 'Observation'")
             obj.date_prise_en_compte=fields.datetime.now()
-            date_creation             = time.mktime(time.strptime(obj.date_creation, '%Y-%m-%d %H:%M:%S'))
-            date_prise_en_compte      = time.mktime(time.strptime(obj.date_prise_en_compte, '%Y-%m-%d %H:%M:%S'))
-            delai_prise_en_compte     = (date_prise_en_compte - date_creation)/3600
-            obj.delai_prise_en_compte = delai_prise_en_compte
             obj.state="en_attente"
 
 
@@ -88,10 +106,6 @@ class IsReclamation(models.Model):
             if obj.reponse_cloture==False:
                 raise Warning(u"Il est obligatoire de renseigner le champ 'Réponse clôture'")
             obj.date_cloture=fields.datetime.now()
-            date_creation     = time.mktime(time.strptime(obj.date_creation, '%Y-%m-%d %H:%M:%S'))
-            date_cloture      = time.mktime(time.strptime(obj.date_cloture, '%Y-%m-%d %H:%M:%S'))
-            delai_cloture     = (date_cloture - date_creation)/3600
-            obj.delai_cloture = delai_cloture
             obj.state="termine"
 
 

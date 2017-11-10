@@ -26,6 +26,14 @@
         parent="is_res_partner_main_menu" 
         action="is_res_partner_action" 
     />
+    <menuitem 
+        id="is_res_partner_contact_menu" 
+        sequence="20" 
+        name="Contacts"
+        parent="is_res_partner_main_menu" 
+        action="is_res_partner_contact_action" 
+    />
+
 
 
     <!-- Réclamations -->
@@ -114,7 +122,6 @@
         <field name="sequence">50</field>
         <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
         <field name="groups_id" eval="[(6,0,[
-            ref('base.group_no_one'),
         ])]"/>
     </record>
     <menuitem 

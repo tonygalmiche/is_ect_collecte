@@ -17,5 +17,20 @@
                 </div>
             </field>
         </record>
+
+
+        <record id="is_view_partner_tree" model="ir.ui.view">
+            <field name="name">is_view_partner_tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <field name="email" position="after">
+                    <field name="zip"/>
+                    <field name="city"/>
+                    <field name="user_id"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </odoo>
