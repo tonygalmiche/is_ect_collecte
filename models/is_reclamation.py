@@ -52,14 +52,17 @@ class IsReclamation(models.Model):
     @api.depends('date_creation','date_prise_en_compte','date_cloture')
     def _compute(self):
         for obj in self:
-            date_creation             = time.mktime(time.strptime(obj.date_creation, '%Y-%m-%d %H:%M:%S'))
-            date_prise_en_compte      = time.mktime(time.strptime(obj.date_prise_en_compte, '%Y-%m-%d %H:%M:%S'))
-            delai_prise_en_compte     = (date_prise_en_compte - date_creation)/3600
+            delai_prise_en_compte=False
+            if obj.date_creation and obj.date_prise_en_compte:
+                date_creation             = time.mktime(time.strptime(obj.date_creation, '%Y-%m-%d %H:%M:%S'))
+                date_prise_en_compte      = time.mktime(time.strptime(obj.date_prise_en_compte, '%Y-%m-%d %H:%M:%S'))
+                delai_prise_en_compte     = (date_prise_en_compte - date_creation)/3600
             obj.delai_prise_en_compte = delai_prise_en_compte
-
-            date_creation     = time.mktime(time.strptime(obj.date_creation, '%Y-%m-%d %H:%M:%S'))
-            date_cloture      = time.mktime(time.strptime(obj.date_cloture, '%Y-%m-%d %H:%M:%S'))
-            delai_cloture     = (date_cloture - date_creation)/3600
+            delai_cloture=False
+            if obj.date_creation and obj.date_cloture:
+                date_creation     = time.mktime(time.strptime(obj.date_creation, '%Y-%m-%d %H:%M:%S'))
+                date_cloture      = time.mktime(time.strptime(obj.date_cloture, '%Y-%m-%d %H:%M:%S'))
+                delai_cloture     = (date_cloture - date_creation)/3600
             obj.delai_cloture = delai_cloture
 
 
