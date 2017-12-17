@@ -53,7 +53,7 @@
         <field name="name">ECT Collecte</field>
         <field name="sequence">1</field>
         <field name="groups_id" eval="[(6,0,[
-            ref('base.group_system'),
+            ref('base.group_user'),
         ])]"/>
     </record>
 
@@ -64,7 +64,7 @@
         <field name="sequence">10</field>
         <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
         <field name="groups_id" eval="[(6,0,[
-            ref('base.group_system'),
+            ref('base.group_user'),
         ])]"/>
     </record>
     <menuitem 
@@ -127,7 +127,7 @@
         <field name="sequence">30</field>
         <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
         <field name="groups_id" eval="[(6,0,[
-            ref('base.group_system'),
+            ref('base.group_user'),
         ])]"/>
     </record>
     <menuitem 
@@ -153,7 +153,7 @@
         <field name="sequence">40</field>
         <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
         <field name="groups_id" eval="[(6,0,[
-            ref('base.group_system'),
+            ref('base.group_user'),
         ])]"/>
     </record>
     <menuitem 
@@ -172,7 +172,7 @@
         <field name="sequence">50</field>
         <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
         <field name="groups_id" eval="[(6,0,[
-            ref('base.group_system'),
+            ref('base.group_user'),
         ])]"/>
     </record>
     <menuitem 
