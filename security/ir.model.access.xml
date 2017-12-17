@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+
+
+    <record id="is_reclamation_rule" model="ir.rule">
+        <field name="name">Accès aux réclamations des collectivés</field>
+        <field name="model_id" ref="model_is_reclamation"/>
+        <field name="domain_force">[('collectivite_id.is_acces_pro_id','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+
+    <record id="is_res_partner_rule" model="ir.rule">
+        <field name="name">Accès fiche collectivité pour les collectivés</field>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="domain_force">[('is_acces_pro_id','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+
+
+
+</data>
+</openerp>

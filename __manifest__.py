@@ -26,15 +26,20 @@ InfoSaône - Module Odoo ECT Collecte
 ],
     'data' : [
         'security/res.groups.xml',
+        'security/res.groups.csv',
         'security/ir.model.access.csv',
+        'security/ir.model.access.xml',
         'views/fetchmail_views.xml',
         'views/mail_message_views.xml',
         'views/is_reclamation_view.xml',
         'views/res_partner_view.xml',
         'views/menu.xml',
+        'views/webclient_templates.xml',
         'wizard/mail_compose_message_view.xml',
     ],
     'installable': True,
     'application': True,
-    'qweb': [],
+    'qweb': [
+    ],
 }
+

@@ -36,10 +36,28 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="prendre_en_compte_action" string="Prendre en compte cette demande" type="object" states="a_traiter"/>
-                    <button name="cloturer_action" string="Cloturer cette demande" type="object" states="en_attente"/>
-                    <button name="send_mail_action" string="Envoyer un mail" type="object" states="a_traiter,en_attente"/>
-                    <field name="state" widget="statusbar" clickable="true"/>
+                    <button 
+                        name="prendre_en_compte_action" 
+                        string="Prendre en compte cette demande"
+                        type="object" states="a_traiter"
+                        groups="base.group_user"
+                    />
+                    <button 
+                        name="cloturer_action" 
+                        string="Cloturer cette demande" 
+                        type="object" states="en_attente"
+                        groups="base.group_user"
+                    />
+                    <button 
+                        name="send_mail_action" 
+                        string="Envoyer un mail" 
+                        type="object" states="a_traiter,en_attente"
+                        groups="base.group_user"
+                    />
+                    <field 
+                        name="state" 
+                        widget="statusbar"
+                    />
                 </header>
                 <sheet>
                     <group string="Identification">
@@ -76,12 +94,43 @@
 
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
+                    <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' readonly="1"/>
                 </div>
             </form>
         </field>
     </record>
+
+    <!-- Permet de rendre l'état du document clickable par les utilisateurs et non clickable par les collectivités -->
+    <record id="is_reclamation_user_form_view" model="ir.ui.view">
+        <field name="name">is_reclamation_user_form_view</field>
+        <field name="model">is.reclamation</field>
+        <field name="priority">2</field>
+        <field name="inherit_id" ref="is_reclamation_form_view"/>
+        <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+        <field name="arch" type="xml">
+            <field name="state" position="replace">
+                <field 
+                    name="state" 
+                    widget="statusbar" 
+                    clickable="true"
+                />
+            </field>
+            <div class="oe_chatter" position="replace">
+                <div class="oe_chatter">
+                    <!--<field name="message_follower_ids" widget="mail_followers"/>-->
+                    <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
+                </div>
+            </div>
+        </field>
+    </record>
+
+
+
+
+
+
+
+
     <record id="is_reclamation_tree_view" model="ir.ui.view">
         <field name="name">is_reclamation_tree_view</field>
         <field name="model">is.reclamation</field>
@@ -263,14 +312,25 @@
     </record>
 
 
-    <!-- mail.template -->
+    <!-- mail.template is.reclamation -->
     <record id="is_mail_template_action" model="ir.actions.act_window">
-        <field name="name">Modèles de courriels</field>
+        <field name="name">Modèles de courriels pour les réclamantions</field>
         <field name="res_model">mail.template</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('model_id.name','=','is.reclamation')]</field>
+        <field name="domain">[('model_id.model','=','is.reclamation')]</field>
     </record>
+
+
+    <!-- mail.template res.users -->
+    <record id="is_mail_template_user_action" model="ir.actions.act_window">
+        <field name="name">Modèles de courriels de connexion</field>
+        <field name="res_model">mail.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('model_id.model','=','res.users')]</field>
+    </record>
+
 
 
     <!-- Ce modèle de courriel est utilisé pour définir la signature de tous les courriels -->

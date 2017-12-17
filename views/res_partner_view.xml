@@ -15,6 +15,9 @@
                         <field string="Réclamations" name="is_reclamation_count" widget="statinfo"/>
                     </button>
                 </div>
+                <field name="lang" position="after">
+                    <field name="is_acces_pro_id"/>
+                </field>
             </field>
         </record>
 
@@ -28,6 +31,7 @@
                     <field name="zip"/>
                     <field name="city"/>
                     <field name="user_id"/>
+                    <field name="is_acces_pro_id"/>
                 </field>
             </field>
         </record>

@@ -2,13 +2,60 @@
 <odoo>
 
 
-
+    <!-- Portail accès professionels -->
+    <record id="is_ect_collecte_pro_main_menu" model="ir.ui.menu">
+        <field name="name">Portail accès professionels</field>
+        <field name="sequence">1</field>
+        <field name="groups_id" eval="[(6,0,[
+            ref('base.group_portal'),
+        ])]"/>
+    </record>
+    <!--
+    <record id="is_res_partner_pro_main_menu" model="ir.ui.menu">
+        <field name="name">Collectivités</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" eval="ref('is_ect_collecte_pro_main_menu')"/>
+        <field name="groups_id" eval="[(6,0,[
+            ref('base.group_portal'),
+        ])]"/>
+    </record>
     <menuitem 
-        id="is_ect_collecte_main_menu" 
-        sequence="1" 
-        name="ECT Collecte"   
+        id="is_res_partner_pro_menu" 
+        sequence="10" 
+        name="Collectivités"
+        parent="is_res_partner_pro_main_menu" 
+        action="is_res_partner_action" 
+    />
+    -->
+    <menuitem 
+        id="is_reclamation_pro_main_menu" 
+        sequence="20" 
+        name="Réclamations"   
+        parent="is_ect_collecte_pro_main_menu" 
+    />
+    <menuitem 
+        id="is_reclamation_pro_menu" 
+        sequence="10" 
+        name="Réclamations"
+        parent="is_reclamation_pro_main_menu" 
+        action="is_reclamation_action" 
     />
 
+
+
+
+
+
+
+
+    <!-- ECT Collecte -->
+    <record id="is_ect_collecte_main_menu" model="ir.ui.menu">
+        <field name="name">ECT Collecte</field>
+        <field name="sequence">1</field>
+        <field name="groups_id" eval="[(6,0,[
+            ref('base.group_system'),
+        ])]"/>
+    </record>
 
 
     <!-- Collectivité -->
@@ -17,6 +64,7 @@
         <field name="sequence">10</field>
         <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
         <field name="groups_id" eval="[(6,0,[
+            ref('base.group_system'),
         ])]"/>
     </record>
     <menuitem 
@@ -79,6 +127,7 @@
         <field name="sequence">30</field>
         <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
         <field name="groups_id" eval="[(6,0,[
+            ref('base.group_system'),
         ])]"/>
     </record>
     <menuitem 
@@ -104,6 +153,7 @@
         <field name="sequence">40</field>
         <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
         <field name="groups_id" eval="[(6,0,[
+            ref('base.group_system'),
         ])]"/>
     </record>
     <menuitem 
@@ -122,6 +172,7 @@
         <field name="sequence">50</field>
         <field name="parent_id" eval="ref('is_ect_collecte_main_menu')"/>
         <field name="groups_id" eval="[(6,0,[
+            ref('base.group_system'),
         ])]"/>
     </record>
     <menuitem 
@@ -148,13 +199,21 @@
     <menuitem 
         id="is_mail_template_menu" 
         sequence="40" 
-        name="Modèles de courriels"
+        name="Modèle courriel réclamantion"
         parent="is_configuration_menu" 
         action="is_mail_template_action" 
     />
     <menuitem 
-        id="is_mail_footer_template_menu" 
+        id="is_mail_template_user_menu" 
         sequence="50" 
+        name="Modèle courriel connexion"
+        parent="is_configuration_menu" 
+        action="is_mail_template_user_action" 
+    />
+
+    <menuitem 
+        id="is_mail_footer_template_menu" 
+        sequence="60" 
         name="Signature des courriels"
         parent="is_configuration_menu" 
         action="is_mail_footer_template_action" 

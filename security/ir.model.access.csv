@@ -1,6 +1,11 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_is_reclamation,access_is_reclamation,model_is_reclamation,base.group_user,1,1,1,1
 
-access_is_reclamation_objet,access_is_reclamation_objet,model_is_reclamation_objet,base.group_user,1,0,0,0
+access_is_reclamation_objet,access_is_reclamation_objet,model_is_reclamation_objet,base.group_portal,1,0,0,0
 access_is_reclamation_objet_gestionnaire,access_is_reclamation_objet_gestionnaire,model_is_reclamation_objet,is_ect_collecte.is_gestionnaire_tables_group,1,1,1,1
+
+
+
+access_is_reclamation_pro,access_is_reclamation_pro,model_is_reclamation,base.group_portal,1,0,0,0
+
 

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+
+
+    <record model="ir.module.category" id="is_acces_professionnels_category">
+        <field name="name">Accès pour les professionnels</field>
+        <field name="description">Accès pour les professionnels</field>
+        <field name="sequence">1</field>
+    </record>
+
+
+
     <record model="res.groups" id="is_gestionnaire_tables_group" >
         <field name="name">Gestionnaire des tables ECT-Collecte</field>
         <field name="comment"></field>

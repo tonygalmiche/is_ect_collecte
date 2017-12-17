@@ -15,7 +15,7 @@ class res_partner(models.Model):
             obj.is_reclamation_count=len(reclamations)
 
     is_reclamation_count = fields.Integer(compute='_compute', string=u'Réclamations')
-
+    is_acces_pro_id      = fields.Many2one('res.users'      , string='Accès pro associé', help="Permet d'autoriser cette collectivité à accèder à cette fiche et aux réclamations associées")
 
     @api.multi
     def reclamation_action(self):
